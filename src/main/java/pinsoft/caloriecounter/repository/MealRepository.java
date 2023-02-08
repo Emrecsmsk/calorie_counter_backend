@@ -1,7 +1,6 @@
 package pinsoft.caloriecounter.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.format.annotation.DateTimeFormat;
 import pinsoft.caloriecounter.model.Meal;
 
 import java.util.Date;

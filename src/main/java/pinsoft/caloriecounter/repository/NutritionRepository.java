@@ -3,7 +3,6 @@ package pinsoft.caloriecounter.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pinsoft.caloriecounter.model.Nutrition;
 
-import java.util.List;
 
 public interface NutritionRepository extends JpaRepository<Nutrition, Integer> {
 

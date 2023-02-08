@@ -2,6 +2,10 @@ package pinsoft.caloriecounter.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pinsoft.caloriecounter.core.utilities.results.DataResult;
+import pinsoft.caloriecounter.core.utilities.results.Result;
+import pinsoft.caloriecounter.core.utilities.results.SuccessDataResult;
+import pinsoft.caloriecounter.core.utilities.results.SuccessResult;
 import pinsoft.caloriecounter.model.Nutrition;
 import pinsoft.caloriecounter.repository.NutritionRepository;
 
@@ -17,16 +21,23 @@ public class NutritionService {
         this.nutritionRepository = nutritionRepository;
     }
 
-    public void addNutrition(Nutrition nutrition){
+    public Result addNutrition(Nutrition nutrition){
         nutritionRepository.save(nutrition);
+        return new SuccessResult();
     }
 
-    public List<Nutrition> getAll(){
-       return nutritionRepository.findAll();
+    public DataResult<List<Nutrition>> getAll(){
+       return new SuccessDataResult(nutritionRepository.findAll());
     }
 
-    public void deleteNutrition(int id){
+    public Result editNutrition(Nutrition nutrition){
+        nutritionRepository.saveAndFlush(nutrition);
+        return new SuccessResult();
+    }
+
+    public Result deleteNutrition(int id){
         nutritionRepository.deleteById(id);
+        return new SuccessResult();
     }
 
 

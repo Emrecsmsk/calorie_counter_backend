@@ -2,6 +2,8 @@ package pinsoft.caloriecounter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pinsoft.caloriecounter.core.utilities.results.DataResult;
+import pinsoft.caloriecounter.core.utilities.results.Result;
 import pinsoft.caloriecounter.model.Nutrition;
 import pinsoft.caloriecounter.repository.NutritionRepository;
 import pinsoft.caloriecounter.service.NutritionService;
@@ -13,27 +15,33 @@ import java.util.List;
 public class NutritionController {
 
     NutritionService nutritionService;
-    private final NutritionRepository nutritionRepository;
 
     @Autowired
     public NutritionController(NutritionService nutritionService,
                                NutritionRepository nutritionRepository) {
         this.nutritionService = nutritionService;
-        this.nutritionRepository = nutritionRepository;
     }
 
-    @PostMapping("/addnutrition")
-    void addNutrition(@RequestBody Nutrition nutrition){
-        nutritionService.addNutrition(nutrition);
+    @PostMapping("/addNutrition")
+    Result addNutrition(@RequestBody Nutrition nutrition){
+
+       return nutritionService.addNutrition(nutrition);
     }
 
-    @GetMapping("/getAll")
-    public List<Nutrition> getAll(){
+    @GetMapping("/getAllNutritions")
+    public DataResult<List<Nutrition>> getAll(){
         return nutritionService.getAll();
     }
 
-    @DeleteMapping("/deleteutrition")
-    void deleteNutrition(int id){
-        nutritionService.deleteNutrition(id);
+
+    @PutMapping("/editNutrition")
+    public Result editNutrition(Nutrition nutrition){
+
+        return nutritionService.editNutrition(nutrition);
+    }
+
+    @DeleteMapping("/deleteNutrition")
+    Result deleteNutrition(int id){
+        return nutritionService.deleteNutrition(id);
     }
 }

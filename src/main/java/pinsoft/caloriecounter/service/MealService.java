@@ -1,10 +1,11 @@
 package pinsoft.caloriecounter.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import pinsoft.caloriecounter.model.Calorie;
+import pinsoft.caloriecounter.core.utilities.results.DataResult;
+import pinsoft.caloriecounter.core.utilities.results.Result;
+import pinsoft.caloriecounter.core.utilities.results.SuccessDataResult;
+import pinsoft.caloriecounter.core.utilities.results.SuccessResult;
 import pinsoft.caloriecounter.model.Meal;
 import pinsoft.caloriecounter.model.Nutrition;
 import pinsoft.caloriecounter.model.User;
@@ -12,7 +13,6 @@ import pinsoft.caloriecounter.repository.MealRepository;
 import pinsoft.caloriecounter.repository.NutritionRepository;
 import pinsoft.caloriecounter.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +23,6 @@ public class MealService {
     MealRepository mealRepository;
 
     NutritionRepository nutritionRepository;
-
     UserRepository userRepository;
 
     @Autowired
@@ -36,13 +35,13 @@ public class MealService {
 
 
 
-    public void addMeal(String mealName, List<Integer> nutrions, String userName, Date date){
+    public Result addMeal(String mealName, List<Integer> nutrions, String userName, Date date){
         List<Nutrition> nutrion = new ArrayList<>();
         for (int i=0; nutrions.size()>i; i++){
             nutrion.add(nutritionRepository.findByNutritionId(nutrions.get(i)));
         }
 
-        User user = userRepository.findByName(userName);
+        User user = userRepository.findByUserName(userName);
 
 
         Meal meal = new Meal();
@@ -52,43 +51,30 @@ public class MealService {
         meal.setUser(user);
         meal.setDate(date);
         mealRepository.save(meal);
+
+        return new SuccessResult();
     }
 
-    public Meal showMeal(int meal_id){
-        return mealRepository.findByMealId(meal_id);
-    }
-
-    public void deleteMeal(int id){
-        mealRepository.deleteById(id);
-    }
-
-
-    public Calorie showCalorie(int id, Date dateStart, Date dateEnd){
-    Calorie calorie = new Calorie();
-
-        double totalKcal = 0;
-        double totalCarbonhydrate = 0;
-        double totalProtein = 0;
-        double totalFat = 0;
-
-        List<Meal> mealList = mealRepository.findByUser_IdAndDateBetween(id, dateStart, dateEnd);
-
-        for(int i=0; mealList.size()>i; i++){
-            for (int j=0; mealList.get(i).getNutritions().size()>j; j++){
-                totalKcal = totalKcal + mealList.get(i).getNutritions().get(j).getKcal();
-                totalCarbonhydrate = totalCarbonhydrate + mealList.get(i).getNutritions().get(j).getCarbonhydrate();
-                totalProtein = totalProtein + mealList.get(i).getNutritions().get(j).getProtein();
-                totalFat = totalFat + mealList.get(i).getNutritions().get(j).getFat();
-            }
+    public Result editMeal(int mealId, String mealName, List<Integer> nutrions){
+        List<Nutrition> nutrion = new ArrayList<>();
+        for (int i=0; nutrions.size()>i; i++){
+            nutrion.add(nutritionRepository.findByNutritionId(nutrions.get(i)));
         }
 
-        calorie.setKcal(totalKcal);
-        calorie.setCarbonhydrate(totalCarbonhydrate);
-        calorie.setProtein(totalProtein);
-        calorie.setFat(totalFat);
+        Meal meal = mealRepository.findByMealId(mealId);
+        meal.setName(mealName);
+        meal.setNutritions(nutrion);
+        mealRepository.saveAndFlush(meal);
+        return new SuccessResult();
+    }
 
-    return calorie;
+    public DataResult<Meal> showMeal(int meal_id){
+        return new SuccessDataResult(mealRepository.findByMealId(meal_id));
+    }
 
+    public Result deleteMeal(int id){
+        mealRepository.deleteById(id);
+        return new SuccessResult();
     }
 
 }

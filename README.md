@@ -10,5 +10,5 @@ You can calculate calories when you eat!
 
 
 <p float="center">
-  <img src="https://github.com/Emrecsmsk/calorie_counter_backend/blob/main/git.png?raw=true"/> 
+  <img src="https://github.com/Emrecsmsk/calorie_counter_backend/blob/main/gitReadme.png?raw=true"/> 
 </p>
